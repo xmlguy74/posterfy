@@ -1,24 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Date } from './components/Date';
+import { Platform } from './components/Platform';
+import { Time } from './components/Time';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="Header">
+        <Time className="Time"></Time>
+        <div className="Title">
+          Morris
+          <br/>
+          Home Theater
+        </div>
+        <Date className="Date"></Date>
+      </div>
+      <div className="Content">
+      </div>
+      <div className="Footer">
+        <Platform className="Platform"></Platform>
+        <div className="Footer-Text">
+          Coming Soon
+        </div>
+      </div>
     </div>
   );
 }
