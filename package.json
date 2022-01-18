@@ -28,6 +28,7 @@
       "react-app/jest"
     ]
   },
+  "homepage": "/local/posterfy/",
   "browserslist": {
     "production": [
       ">0.2%",

@@ -1,38 +1,76 @@
 .App {
+  background-color: #000000;
+  color: white;
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.Header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Content {  
+  background-image: url("poster.jpg");
+  background-size: cover;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  border: solid 3px #FFFFFF;
+  border-radius: 10px;
+  width: 95vw;
+}
+
+.Footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.Time {
+  flex-grow: 0;
+  width: 20vw;
+  color: #DDDDDD;
+}
+
+.Title {
+  font-family: Josefin Sans;
+  font-size: 60pt;
+  font-weight: 700;
+  font-variant-caps: all-small-caps;
+  flex-grow: 0;
+  width: 60vw;
+}
+
+.Date {
+  flex-grow: 0;
+  width: 20vw;
+  color: #DDDDDD;
+}
+
+.Platform {
+  margin: 10px;
+  border: solid 3px #FFFFFF;
+  border-radius: 10px;
+  width: 15vw;
+}
+
+.Footer-Text {
+  font-family: Josefin Sans;
+  font-size: 60pt;
+  font-weight: 700;
+  font-variant-caps: all-small-caps;
+  flex-grow: 0;
+  width: 80vw;
 }
