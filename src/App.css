@@ -64,6 +64,9 @@
   border: solid 3px #FFFFFF;
   border-radius: 10px;
   width: 15vw;
+  height: 15vw;
+  background-image: url("platform_fandango.png");
+  background-size: contain;
 }
 
 .Footer-Text {
