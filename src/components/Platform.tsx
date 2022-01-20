@@ -6,6 +6,6 @@ export interface PlatformProps {
 
 export function Platform(props: PlatformProps) {
     return (
-        <img className={props.className} src="platform.png" alt="Platform" />
+        <div className={props.className}></div>
     );
 }
