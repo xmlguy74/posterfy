@@ -33,7 +33,7 @@ function App() {
         const urlParams = new URLSearchParams(window.location.search);
         const authToken = urlParams.get('authToken');
   
-        const res = await fetch(haUrl + '/api/states/sensor.posterfy_feed', {
+        const res = await fetch(haUrl + '/api/states/sensor.tmdb_feed', {
           headers: {
             'Authorization': 'Bearer ' + authToken
           }
@@ -78,7 +78,7 @@ function App() {
       <div className="Content" style={{backgroundImage: `url(${movie?.poster})`}}>
       </div>
       <div className="Footer">
-        <Platform className="Platform"></Platform>
+        <Platform className="Platform" platform={movie?.platform}></Platform>
         <div className="Footer-Text">
           {formatCategory(movie?.category)}
         </div>
