@@ -1,11 +1,11 @@
 import { url } from 'inspector';
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import { shuffle } from './arrayHelpers';
 import { DateTime, DateTimeMode } from './components/DateTime';
 import { Platform } from './components/Platform';
 
-const haUrl = "http://192.168.15.50:8123";
-const wsUrl = "ws://192.168.15.50:8123/api/websocket";
+const haUrl = "http://localhost:8123";
 
 interface Entity {
   entity_id: string,
@@ -23,33 +23,44 @@ interface Movie {
   poster: string
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const authToken = urlParams.get('authToken');
+const refreshRate = (urlParams.get('refresh') ?? 30000) as number;
+
 function App() {
 
-  const [movie, setMovie] = useState<Movie|null>(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movie, setMovie] = useState<Movie>();
 
   useEffect(() => {
 
+    async function updateMovieList() {
+      const res = await fetch(haUrl + '/api/states/sensor.tmdb_feed', {
+        headers: {
+          'Authorization': 'Bearer ' + authToken
+        }
+      });
+
+      const entity = (await res.json()) as Entity;      
+      setMovies(shuffle(entity.attributes.movies));
+    }
+
     async function updateMovie() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const authToken = urlParams.get('authToken');
   
-        const res = await fetch(haUrl + '/api/states/sensor.tmdb_feed', {
-          headers: {
-            'Authorization': 'Bearer ' + authToken
-          }
-        });
-  
-        const entity = (await res.json()) as Entity;
-        const movies = entity.attributes.movies.filter(m => m.title !== movie?.title);
-        const idx = Math.floor(Math.random() * movies.length);
-        setMovie(movies[idx]);
+        if (movies.length == 0) {
+          await updateMovieList();
+        }
+
+        if (movies.length > 0) {
+          setMovie(movies.pop());
+        }
     }
 
     if (!movie) {
       updateMovie();
     }
 
-    const interval = setInterval(updateMovie, 30000);
+    const interval = setInterval(updateMovie, refreshRate);
 
     return () => clearInterval(interval);
   })
@@ -60,6 +71,9 @@ function App() {
     }
     if (c === "in_theaters") {
       return "In Theaters"
+    }
+    if (c === "streaming") {
+      return "Now Playing"
     }
     return ""
   }
