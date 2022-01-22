@@ -1,6 +1,6 @@
 {
-  "name": "temp",
-  "version": "0.1.0",
+  "name": "posterfy",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
@@ -29,7 +29,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "/local/posterfy/",
+  "homepage": "/local/posterfy/index.html",
   "browserslist": {
     "production": [
       ">0.2%",

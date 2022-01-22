@@ -5,7 +5,10 @@ import { shuffle } from './arrayHelpers';
 import { DateTime, DateTimeMode } from './components/DateTime';
 import { Platform } from './components/Platform';
 
-const haUrl = ""; //http://localhost:8123";
+var haUrl = "";
+if (window.location.hostname === "localhost") {
+  haUrl = "http://192.168.15.50:8123";
+}
 
 interface Entity {
   entity_id: string,
@@ -73,7 +76,7 @@ function App() {
       return "In Theaters"
     }
     if (c === "streaming") {
-      return "Now Playing"
+      return "Now Streaming"
     }
     return ""
   }
@@ -81,13 +84,15 @@ function App() {
   return (
     <div className="App">
       <div className="Header">
-        <DateTime className="Time" mode={DateTimeMode.Time}></DateTime>
-        <div className="Title">
-          Morris
-          <br/>
-          Home Theater
+      <div className="Subtitle">
+          <DateTime className="Time" mode={DateTimeMode.Time}></DateTime>
+          <DateTime className="Date" mode={DateTimeMode.Date}></DateTime>
         </div>
-        <DateTime className="Date" mode={DateTimeMode.Date}></DateTime>
+        <div className="Title">
+          {/* <div style={{fontSize: 'larger'}}>Morris</div> */}
+          {/* <div style={{fontSize: 'smaller'}}>Home Theater</div> */}
+          <iframe src="https://ntmaker.gfto.ru/newneontexten/?image_height=150&image_width=490&image_font_shadow_width=30&image_font_size=64&image_background_color=000000&image_text_color=FF91A9&image_font_shadow_color=F7406B&image_url=&image_text=Morris%20Family%20Theater&image_font_family=Nickainley&" frameBorder="no" scrolling="no" height="160" width="100%" ></iframe>
+        </div>
       </div>
       <div className="Content" style={{backgroundImage: `url(${movie?.poster})`}}>
       </div>

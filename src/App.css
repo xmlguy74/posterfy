@@ -2,24 +2,33 @@
   background-color: #000000;
   color: white;
   text-align: center;
-  min-height: 100vh;
+  min-height: 98vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  
 }
 
 .Header {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 94vw;
+}
+
+.Subtitle {
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .Content {  
   background-size: cover;
-  margin: 10px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -27,7 +36,7 @@
   justify-content: center;
   border: solid 3px #FFFFFF;
   border-radius: 10px;
-  width: 95vw;
+  width: 94vw;
 }
 
 .Footer {
@@ -35,35 +44,38 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 94vw;
 }
 
 .Time {
+  text-align: left;
   font-family: Josefin Sans;
-  font-size: 24pt;
+  font-size: 28pt;
   flex-grow: 0;
-  width: 20vw;
+  width: 50%;
   color: #DDDDDD;
 }
 
 .Title {
   font-family: Josefin Sans;
-  font-size: 60pt;
+  font-size: 50pt;
   font-weight: 700;
   font-variant-caps: all-small-caps;
   flex-grow: 0;
-  width: 60vw;
+  width: 100%;
 }
 
 .Date {
+  text-align: right;
   font-family: Josefin Sans;
-  font-size: 24pt;
+  font-size: 28pt;
   flex-grow: 0;
-  width: 20vw;
+  width: 50%;
   color: #DDDDDD;
 }
 
 .Platform {
-  margin: 10px;
+  margin-top:1vh;
   border: solid 3px #FFFFFF;
   border-radius: 10px;
   width: 15vw;
@@ -72,8 +84,9 @@
 }
 
 .Footer-Text {
+  margin-top:1vh;
   font-family: Josefin Sans;
-  font-size: 88pt;
+  font-size: 80pt;
   font-weight: 700;
   font-variant-caps: all-small-caps;
   flex-grow: 0;
