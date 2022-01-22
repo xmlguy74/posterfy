@@ -5,7 +5,7 @@ import { shuffle } from './arrayHelpers';
 import { DateTime, DateTimeMode } from './components/DateTime';
 import { Platform } from './components/Platform';
 
-const haUrl = "http://localhost:8123";
+const haUrl = ""; //http://localhost:8123";
 
 interface Entity {
   entity_id: string,
