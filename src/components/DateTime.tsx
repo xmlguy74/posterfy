@@ -9,13 +9,14 @@ export enum DateTimeMode {
 export interface DateTimeProps {
     mode: DateTimeMode
     className?: string
+    style?: React.CSSProperties
 }
 
 export function DateTime(props: DateTimeProps) {
     const [now, setNow] = useState(new Date());
 
     useEffect(() => {
-        const timer = setInterval(() => setNow(new Date()), 250);
+        const timer = setInterval(() => setNow(new Date()), 500);
 
         return () => clearInterval(timer);
     });
@@ -23,19 +24,19 @@ export function DateTime(props: DateTimeProps) {
     var mom = moment(now);
 
     return (
-        <div className={props.className}>
+        <div className={props.className} style={props.style}>
             {props.mode === DateTimeMode.Time ?
                 (
                     <>
                         <span>{mom.format("h")}</span>
-                        <span style={{visibility: (now.getSeconds() % 2) == 0 ? "visible" : "hidden"}}>:</span>
-                        <span>{mom.format("m")}</span>
+                        <span style={{visibility: (now.getSeconds() % 2) === 0 ? "inherit" : "hidden"}}>:</span>
+                        <span>{mom.format("mm")}</span>
                         <span> {mom.format("A")}</span>
                     </>
                 ) :
                 (
                     <>
-                        <div>{moment(now).format("MMMM d, YYYY")}</div>
+                        <div>{moment(now).format("MMM DD, YYYY")}</div>
                     </>
                 )
             }

@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { HomeAssistantProvider } from './contexts/HomeAssistantContext';
+import './themes/default.scss';
+
+const urlParams = new URLSearchParams(window.location.search);
+const authToken = urlParams.get('authToken');
+const refreshRate = ((urlParams.get('refresh') ?? 30000) as number);
+
+function loadJS(url: string) {
+  var xhttp = new XMLHttpRequest();
+  var script = document.createElement("script");
+  xhttp.open("GET", url, false);
+  xhttp.send();
+  script.text = xhttp.responseText;
+  document.head.appendChild(script).parentNode.removeChild(script);
+}
+
+loadJS("config.js");
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <HomeAssistantProvider hostname={window.CONFIG.homeAssistant} authToken={authToken}>    
+      <App refreshRate={refreshRate} />
+    </HomeAssistantProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

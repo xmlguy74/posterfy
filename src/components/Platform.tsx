@@ -1,4 +1,3 @@
-import React from 'react';
 import platform_netflix from '../assets/platform_netflix.png'
 import platform_hbomax from '../assets/platform_hbomax.png'
 import platform_prime from '../assets/platform_prime.png'
