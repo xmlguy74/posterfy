@@ -4,7 +4,7 @@ import { EntityState, HomeAssistant, useHomeAssistant } from "../hooks/useHomeAs
 
 interface HomeAssistantContextType {
     ha: HomeAssistant,
-    states: Map<string, EntityState>
+    states: EntityState[]
 }
 
 export const HomeAssistantContext = React.createContext<HomeAssistantContextType>(

@@ -31,10 +31,7 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ],
-    "rules": {
-      "eqeqeq": "error"
-    }
+    ]
   },
   "homepage": "/local/posterfy",
   "browserslist": {
