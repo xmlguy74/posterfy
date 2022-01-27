@@ -1,5 +1,7 @@
 interface Configuration {
     homeAssistant: string,
+    secure: boolean,
+    theme: string,
     title: string,
     subtitle: string,
     showTime: boolean,

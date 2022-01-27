@@ -4,7 +4,6 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HomeAssistantProvider } from './contexts/HomeAssistantContext';
-import './themes/default.scss';
 
 const urlParams = new URLSearchParams(window.location.search);
 const authToken = urlParams.get('authToken');
@@ -20,6 +19,11 @@ function loadJS(url: string) {
 }
 
 loadJS("config.js");
+
+//load the theme
+if (window.CONFIG?.theme) {
+  import(`./themes/${window.CONFIG.theme}.scss`)
+}
 
 ReactDOM.render(
   <React.StrictMode>

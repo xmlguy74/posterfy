@@ -1,10 +1,11 @@
 var CONFIG = {
     homeAssistant: "192.168.15.50:8123",
     secure: false,
-    theme: "default",
-    title: 'Robinson',
-    subtitle: 'Home Cinema',
+    theme: "retro",
+    title: 'Morris',
+    subtitle: 'Family Theater',
     showDate: true,
     showTime: true,
-    mediaPlayer: 'media_player.living_room_roku',
+    mediaPlayer: 'media_player.rec_room_roku',
+    mediaPlayerExtended: 'sensor.movie_room_roku_state',
 }

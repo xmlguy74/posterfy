@@ -10,7 +10,7 @@ import type { Entity, FeedAttributes, Movie } from './dataTypes';
 import { ConnectionState, SubscribeEventsCommand } from './hooks/useHomeAssistant';
 
 import 'react-toastify/dist/ReactToastify.min.css';
-import { AppSection, FooterSection, FooterText, PosterSection, TaskbarSection, HeaderSection } from './App.styled';
+import { AppSection, FooterSection, FooterText, PosterSection, TaskbarSection, HeaderSection, StatusbarSection } from './App.styled';
 import { MediaPlayer } from './components/MediaPlayer';
 
 export interface AppProps {
@@ -67,7 +67,7 @@ function App(props: AppProps) {
       return "In Theaters"
     }
     if (c === "streaming") {
-      return "Streaming"
+      return "Now Streaming"
     }
     return ""
   }
@@ -75,26 +75,30 @@ function App(props: AppProps) {
   return (
     <AppSection className="App">
       
-      <TaskbarSection>
+      <TaskbarSection className="Taskbar">
         <DateTime className="Time" mode={DateTimeMode.Time} style={{visibility: config.showTime ? 'visible' : 'hidden'}}></DateTime>
-        <MediaPlayer className="MediaPlayer" style={{visibility: config.mediaPlayer ? 'visible' : 'hidden'}} entity={config.mediaPlayer}></MediaPlayer>
         <DateTime className="Date" mode={DateTimeMode.Date} style={{visibility: config.showDate ? 'visible' : 'hidden'}}></DateTime>
       </TaskbarSection>
       
-      <HeaderSection>
+      <HeaderSection className="Header">
         <TitleBanner title={config.title} subtitle={config.subtitle}></TitleBanner>
       </HeaderSection>
       
       <PosterSection>
-        <Poster imageUrl={movie?.poster} />
+        <Poster className="Poster" imageUrl={movie?.poster} />
       </PosterSection>      
       
-      <FooterSection>
+      <FooterSection className="Footer">
         <Platform className="Platform" platform={movie?.platform}></Platform>
-        <FooterText>
+        <FooterText className="Footer-Text">
           {formatCategory(movie?.category)}
         </FooterText>
       </FooterSection>
+
+      <StatusbarSection className="Statusbar">
+        <MediaPlayer style={{visibility: config.mediaPlayer ? 'visible' : 'hidden'}} entity={config.mediaPlayer}></MediaPlayer>
+      </StatusbarSection>
+
       
       <ToastContainer position="bottom-right" autoClose={3000} newestOnTop closeButton={false} pauseOnFocusLoss={false} />
     

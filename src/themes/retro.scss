@@ -1,6 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Exo:wght@900&display=swap");
 
+body {
+  margin: 0;
+  background-color: #000000;
+  background: radial-gradient(rgba(#7600bf, 0.5) 0%, transparent 70%),
+    linear-gradient(#0b161e 40%, #202076 70%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .App {
   color: white;
   perspective: 100vw;
@@ -35,14 +47,19 @@
   }
 }
 
+.Taskbar {
+  margin-top: 1vh;
+  width: 98vw;
+}
+
 .Time {
   white-space: nowrap;
   text-align: left;
   font-family: Josefin Sans;
   font-size: 28pt;
   flex-grow: 0;
-  width: 50%;
   color: #dddddd;
+  width: 50%;
 }
 
 .Date {
@@ -51,26 +68,14 @@
   font-family: Josefin Sans;
   font-size: 28pt;
   flex-grow: 0;
+  color: #dddddd;
   width: 50%;
-  color: #dddddd;
-}
-
-.MediaPlayer {
-  text-align: center;
-  white-space: nowrap;
-  font-family: Josefin Sans;
-  font-size: 28pt;
-  flex-grow: 1;
-  color: #dddddd;
 }
 
 .Platform {
   margin-top: 1vh;
   border: solid 3px #ffffff;
   border-radius: 10px;
-  width: 15vw;
-  height: 15vw;
-  background-size: cover;
 }
 
 .TitleBanner-Background {
@@ -88,21 +93,32 @@
   margin-top: 0.9em;
 }
 
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+
 .TitleBanner-Title {
   position: relative;
   font-family: "Exo";
-  font-size: 5em;
-  margin: 0;
+  font-size: 8em;
+  margin: -1vh 0 0 0;
   transform: skew(-15deg);
   letter-spacing: 0.03em;
 
   &::after {
     content: "";
+    animation: spin ease 5s;
+    animation-iteration-count: infinite;
     position: absolute;
     top: -0.1em;
-    right: 0.05em;
-    width: 0.4em;
-    height: 0.4em;
+    right: -0.1em;
+    width: 0.5em;
+    height: 0.5em;
     background: radial-gradient(
         white 3%,
         rgba(white, 0.3) 15%,
@@ -121,6 +137,7 @@
   }
 
   *:last-child {
+    display: inline;
     position: absolute;
     left: 0;
     top: 0;
@@ -143,10 +160,47 @@
   font-family: "Mr Dafoe";
   font-weight: 300;
   margin: 0;
-  font-size: 3.5em;
+  font-size: 5em;
   margin-top: -0.9em;
   color: white;
   text-shadow: 0 0 0.05em #fff, 0 0 0.2em #fe05e1, 0 0 0.3em #fe05e1;
   transform: rotate(-9deg);
   z-index: 99999;
+}
+
+.Poster {
+  border: solid 3px #ffffff;
+  border-radius: 10px;
+  width: 80vw;
+  height: 70vh;
+  margin-top: -2vh;
+}
+
+.Footer {
+    width: 80vw;
+    height: 10vh;
+}
+
+.Footer-Text {
+  font-family: Josefin Sans;
+  font-weight: 700;
+  font-variant-caps: all-small-caps;
+  font-size: 65pt;
+}
+
+.Statusbar {
+  margin-top: 1vh;
+  border-top: solid 3px #fff;
+  background-color:#000;
+  color: #fff;
+  height: 5vh;
+  font-size: 28pt;
+}
+
+.MediaPlayer-Content {
+  margin-left: 1vw;
+}
+
+.MediaPlayer-Status {
+  margin-right: 1vw;
 }

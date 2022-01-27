@@ -32,12 +32,8 @@ export const PosterSection = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border: solid 3px #FFFFFF;
-    border-radius: 10px;
-    width: 90vw;
-    height: 72vh;
-    margin-top: -1em;
+    justify-content: center;    
+    width: 100%;
 `
 
 export const FooterSection = styled.div`
@@ -45,16 +41,17 @@ export const FooterSection = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 90vw;
-    margin-bottom: 0.8em;
+    width: 100%;
 `
 
 export const FooterText = styled.div`
-    margin-top:1vh;
-    font-family: Josefin Sans;
-    font-size: 80pt;
-    font-weight: 700;
-    font-variant-caps: all-small-caps;
+`
+
+export const StatusbarSection = styled.div`
+    display: flex;
     flex-grow: 0;
-    width: 80vw;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 `

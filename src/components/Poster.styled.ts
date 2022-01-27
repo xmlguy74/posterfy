@@ -3,9 +3,9 @@ import styled from "@emotion/styled";
 
 
 export const PosterContainer = styled.div`
+    height:900px;
+    width: 600px;
     position: relative;
-    width: 100%;
-    height: 100%;
 `
 const FadeIn = keyframes`
     0% {
