@@ -20,9 +20,23 @@ function loadJS(url: string) {
 
 loadJS("config.js");
 
+const render = () => {
+  ReactDOM.render(
+    <React.StrictMode>
+      <HomeAssistantProvider hostname={window.CONFIG.homeAssistant} authToken={authToken}>    
+        <App refreshRate={refreshRate} />
+      </HomeAssistantProvider>
+    </React.StrictMode>,
+    document.getElementById('root'));
+};
+
 //load the theme
 if (window.CONFIG?.theme) {
-  import(`./themes/${window.CONFIG.theme}.scss`)
+  import(`./themes/${window.CONFIG.theme}.scss`).then(() => {
+    render();
+  })
+} else {
+  render();
 }
 
 ReactDOM.render(

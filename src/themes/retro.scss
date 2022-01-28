@@ -4,7 +4,8 @@
 body {
   margin: 0;
   background-color: #000000;
-  background: radial-gradient(rgba(#7600bf, 0.5) 0%, transparent 70%),
+  background: 
+    radial-gradient(rgba(#7600bf, 0.5) 0%, transparent 70%),
     linear-gradient(#0b161e 40%, #202076 70%);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -49,33 +50,27 @@ body {
 
 .Taskbar {
   margin-top: 1vh;
-  width: 98vw;
+  width: 100%;
 }
 
 .Time {
-  white-space: nowrap;
   text-align: left;
   font-family: Josefin Sans;
   font-size: 28pt;
-  flex-grow: 0;
+  flex-grow: 1;
   color: #dddddd;
   width: 50%;
+  margin-left: 2vw;
 }
 
 .Date {
+  width: 50%;
   text-align: right;
-  white-space: nowrap;
   font-family: Josefin Sans;
   font-size: 28pt;
-  flex-grow: 0;
+  flex-grow: 1;
   color: #dddddd;
-  width: 50%;
-}
-
-.Platform {
-  margin-top: 1vh;
-  border: solid 3px #ffffff;
-  border-radius: 10px;
+  margin-right: 2vw;
 }
 
 .TitleBanner-Background {
@@ -169,38 +164,45 @@ body {
 }
 
 .Poster {
-  border: solid 3px #ffffff;
+  border: outset 3px #fff;
   border-radius: 10px;
   width: 80vw;
   height: 70vh;
   margin-top: -2vh;
 }
 
+.Platform {
+  margin-top: 1vh;
+  border: outset 3px #fff;
+  border-radius: 10px;
+}
+
 .Footer {
     width: 80vw;
     height: 10vh;
 }
-
 .Footer-Text {
   font-family: Josefin Sans;
   font-weight: 700;
   font-variant-caps: all-small-caps;
   font-size: 65pt;
+  flex-grow: 1;
 }
 
 .Statusbar {
   margin-top: 1vh;
   border-top: solid 3px #fff;
-  background-color:#000;
+  background-color:#202076;
   color: #fff;
   height: 5vh;
+  width: 100%;
   font-size: 28pt;
 }
 
 .MediaPlayer-Content {
-  margin-left: 1vw;
+  margin-left: 2vw;
 }
 
 .MediaPlayer-Status {
-  margin-right: 1vw;
+  margin-right: 2vw;
 }

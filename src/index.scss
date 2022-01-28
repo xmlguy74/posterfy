@@ -1,5 +1,9 @@
 body {
+  width: 100%;
   margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -19,6 +23,7 @@ body {
   background-size: cover;
 }
 
-.Footer-Text {
-  flex-grow: 1;
+.Poster {
+  height:900px;
+  width: 600px;
 }

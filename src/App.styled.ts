@@ -6,11 +6,10 @@ export const AppSection = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
 `
 export const TaskbarSection = styled.div`
     display: flex;
-    flex-grow: 0;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -18,22 +17,21 @@ export const TaskbarSection = styled.div`
 `
 
 export const HeaderSection = styled.div`
-    flex-grow: 0;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
 `
 
 export const PosterSection = styled.div`
-    flex-grow: 1;
+    flex-grow: 1;    
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;    
-    width: 100%;
 `
 
 export const FooterSection = styled.div`
@@ -41,7 +39,6 @@ export const FooterSection = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
 `
 
 export const FooterText = styled.div`
@@ -49,9 +46,7 @@ export const FooterText = styled.div`
 
 export const StatusbarSection = styled.div`
     display: flex;
-    flex-grow: 0;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
 `
