@@ -1,12 +1,4 @@
-export interface Entity<TAttributes extends EntityAttributes> {
-    entity_id: string,
-    attributes: TAttributes,
-}
-
-export interface EntityAttributes {
-}
-
-export interface FeedAttributes extends EntityAttributes {
+export interface FeedAttributes {
     movies: Movie[]
 }
 

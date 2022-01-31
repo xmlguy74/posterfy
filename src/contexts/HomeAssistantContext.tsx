@@ -1,10 +1,10 @@
 import * as React from "react";
-import { useEntityStateCache } from "../hooks/useEntityStateCache";
-import { EntityState, HomeAssistant, useHomeAssistant } from "../hooks/useHomeAssistant";
+import { useEntityCache } from "../hooks/useEntityCache";
+import { HomeAssistant, useHomeAssistant } from "../hooks/useHomeAssistant";
 
 interface HomeAssistantContextType {
     ha: HomeAssistant,
-    states: EntityState[]
+    states: AnyEntity[]
 }
 
 export const HomeAssistantContext = React.createContext<HomeAssistantContextType>(
@@ -22,7 +22,7 @@ export interface HomeAssistantProviderProps {
 export function HomeAssistantProvider(props: React.PropsWithChildren<HomeAssistantProviderProps>) {
     
     const ha = useHomeAssistant(props.hostname, props.authToken);
-    const { states } = useEntityStateCache(ha);
+    const { states } = useEntityCache(ha);
     
     return (
         <HomeAssistantContext.Provider value={{ha, states}}>

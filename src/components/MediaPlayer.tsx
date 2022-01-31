@@ -1,51 +1,47 @@
 import React, { useContext } from 'react';
 import { HomeAssistantContext } from '../contexts/HomeAssistantContext';
 import { Container, ContentSection, MediaImage, StatusSection } from './MediaPlayer.styled';
-import { FaPowerOff, FaHome, FaStop, FaPlay, FaPause, FaQuestion } from 'react-icons/fa';
+import * as Bootstrap from 'react-icons/bs';
+import { resolveMetadata } from '../utilHelpers';
 
 export interface MediaPlayerProps {
     className?: string,
     style?: React.CSSProperties,
-    entity: string,
+    config: MediaPlayerConfig,
 }
 
-const MEDIA_STATES: any = {
-    idle: "Off",
-    home: "On",
-    on: "On",
-    playing: "Playing",
-    paused: "Paused"
+interface MediaPlayerSource {
+    text: string,
+    image: string,
 }
 
-const MEDIA_STATE_ICONS: any = {
-    idle: FaPowerOff,
-    home: FaHome,
-    on: FaStop,
-    playing: FaPlay,
-    paused: FaPause
+interface MediaPlayerState {
+    text: string,
+    icon: string,
 }
 
 export function MediaPlayer(props: MediaPlayerProps) {
 
-    const { states } = useContext(HomeAssistantContext);
+    const ha = useContext(HomeAssistantContext);
 
-    const mp = states?.find(i => i.entity_id == window.CONFIG.mediaPlayer);
+    const mp = ha.states?.find(i => i.entity_id === props.config.entity_id);
+
+    const source = resolveMetadata<MediaPlayerSource>(props.config.entity_id, mp, ha, props.config.source);
+    const state = resolveMetadata<MediaPlayerState>(props.config.entity_id, mp, ha, props.config.state);
+    
+    const stateIcon = (Bootstrap as any)[state.icon] ?? Bootstrap.BsQuestionCircle;
 
     return (
-        <>
-        { mp && 
-            <Container className={props.className} style={props.style}>
-                <ContentSection className='MediaPlayer-Content'>
-                    { mp.state !== 'idle' && mp.attributes.entity_picture && <MediaImage style={{backgroundImage: `url(http://${window.CONFIG.homeAssistant}${mp.attributes.entity_picture}`}} /> }
-                    { mp.state !== 'idle' && <div>{mp.attributes.source}</div> }
-                </ContentSection>
-                <StatusSection className='MediaPlayer-Status'>
-                    { React.createElement(MEDIA_STATE_ICONS[mp.state] ?? FaQuestion) }
-                    &nbsp;
-                    <div>{MEDIA_STATES[mp.state] ?? mp.state}</div>
-                </StatusSection>
-            </Container>
-        }
-        </>
+        <Container className={props.className} style={props.style}>
+            <ContentSection className='MediaPlayer-Content'>
+                { source.image && <MediaImage style={{backgroundImage: `url(http://${window.CONFIG.homeAssistant}${source.image}`}} /> }
+                <div>{source.text}</div>
+            </ContentSection>
+            <StatusSection className='MediaPlayer-Status'>
+                { React.createElement(stateIcon) }
+                &nbsp;
+                <div>{state.text}</div>
+            </StatusSection>
+        </Container>
     )
 }

@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ConnectionState, EntityState, EventMessage, GetStatesCommand, GetStatesMessage, HomeAssistant, Message, SubscribeEventsCommand } from "./useHomeAssistant";
+import { ConnectionState, EventMessage, GetStatesCommand, GetStatesMessage, HomeAssistant, Message, SubscribeEventsCommand } from "./useHomeAssistant";
 
 
-export function useEntityStateCache(ha: HomeAssistant) {
+export function useEntityCache(ha: HomeAssistant) {
     
-    const [states, setStates] = useState<EntityState[]>(null);
-    const statesRef = useRef<EntityState[]>();
+    const [states, setStates] = useState<AnyEntity[]>(null);
+    const statesRef = useRef<AnyEntity[]>();
 
     statesRef.current = states;
    

@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 export enum ConnectionState {
     UNINSTANTIATED,
     CONNECTING,
     CONNECTED,
-    AUTHENTICATING,
     AUTHENTICATED,
+    BROKEN,
     CLOSING,
     CLOSED,
 }
@@ -35,6 +35,12 @@ export class GetStatesCommand extends Command {
     }
 }
 
+export class PingCommand extends Command {
+    constructor() {
+        super('ping')
+    }    
+}
+
 export interface Message {    
     id: number,
     type: string,
@@ -45,7 +51,7 @@ export interface ResultMessage<T> extends Message {
     result: T
 }
 
-export interface GetStatesMessage extends ResultMessage<EntityState[]> {
+export interface GetStatesMessage extends ResultMessage<AnyEntity[]> {
 
 }
 
@@ -60,14 +66,8 @@ export interface EventMessageEvent {
 
 export interface EventMessageData {
     entity_id: string,
-    new_state: EntityState,
-    old_state: EntityState,
-}
-
-export interface EntityState {
-    entity_id: string,
-    state: string,
-    attributes: any,
+    new_state: AnyEntity,
+    old_state: AnyEntity,
 }
 
 export interface HomeAssistant {
@@ -79,13 +79,19 @@ export interface HomeAssistant {
 
 export type SendCallback = (msg: Message) => boolean | void;
 
-const callbacks = new Map<number, SendCallback>();
-
 export function useHomeAssistant(hostname: string, authToken: string): HomeAssistant {
-
-    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://' + hostname + "/api/websocket");
+    
     const [received] = useState<Message>();
-    const [authorized, setAuthorized] = useState<boolean>(null);
+    const [authorized, setAuthorized] = useState<boolean>(false);
+    const [connect, setConnect] = useState<boolean>(true);
+    const [callbacks] = useState<Map<number, SendCallback>>(new Map<number, SendCallback>());
+
+    const { sendMessage, lastMessage, readyState } = useWebSocket('ws://' + hostname + "/api/websocket", {
+        retryOnError: false,
+        reconnectAttempts: 2592000000,
+        reconnectInterval: 5000,
+        shouldReconnect: (e) => true,
+    }, connect);
 
     const connectionState = useMemo<ConnectionState>(() => {
         switch (readyState) {
@@ -93,9 +99,10 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
                 return ConnectionState.CONNECTING;
             }
             case ReadyState.OPEN: {
-                return authorized === null ? 
+                if (!connect) return ConnectionState.BROKEN;                
+                return !authorized ? 
                     ConnectionState.CONNECTED :
-                    authorized ? ConnectionState.AUTHENTICATED : ConnectionState.AUTHENTICATING;
+                    ConnectionState.AUTHENTICATED;
             }
             case ReadyState.CLOSING: {
                 return ConnectionState.CLOSING;
@@ -107,7 +114,10 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
                 return ConnectionState.UNINSTANTIATED;
             }
         }        
-    }, [readyState, authorized]);
+    }, [readyState, authorized, connect]);
+
+    const connectionStateRef = useRef<ConnectionState>();
+    connectionStateRef.current = connectionState;
 
     useEffect(() => {
 
@@ -141,13 +151,44 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
         if (lastMessage) {
             processMessage(lastMessage);
         }
-    }, [authToken, sendMessage, lastMessage]);
+    }, [authToken, sendMessage, lastMessage, callbacks]);
+    
+    function doPing() {
+        try {
+            if (connectionStateRef.current === ConnectionState.AUTHENTICATED || connectionStateRef.current === ConnectionState.BROKEN) {
+                const handle = setTimeout(() => {
+                    console.log("ping lost")
+                    callbacks.clear();
+                    setConnect(false);
+                }, 5000);
 
-    function send<TCommand extends Command, TMessage extends Message>(command: TCommand, callback?: SendCallback) {
+                console.log("ping")
+                send(new PingCommand(), (msg: Message) => {
+                    console.log("pong")
+                    clearTimeout(handle);
+                    setConnect(true);
+                    return false;
+                })
+            }
+            else {
+                console.log("ping reset")
+                setConnect(true);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        const handle = setInterval(doPing, 10000);
+        return () => clearInterval(handle);
+    }, [])
+
+    function send<TCommand extends Command>(command: TCommand, callback?: SendCallback) {
         if (callback && command.id) {            
             callbacks.set(command.id, callback);
         }
-        sendMessage(JSON.stringify(command));
+        sendMessage(JSON.stringify(command), false);
     }
 
     async function api(method: string, path: string) {

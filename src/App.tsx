@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { shuffle } from './arrayHelpers';
 import { DateTime, DateTimeMode } from './components/DateTime';
@@ -6,8 +6,8 @@ import { Platform } from './components/Platform';
 import { Poster } from './components/Poster';
 import { TitleBanner } from './components/TitleBanner';
 import { HomeAssistantContext } from './contexts/HomeAssistantContext';
-import type { Entity, FeedAttributes, Movie } from './dataTypes';
-import { ConnectionState, SubscribeEventsCommand } from './hooks/useHomeAssistant';
+import type { Movie } from './dataTypes';
+import { ConnectionState } from './hooks/useHomeAssistant';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import { AppSection, FooterSection, FooterText, PosterSection, TaskbarSection, HeaderSection, StatusbarSection } from './App.styled';
@@ -22,42 +22,50 @@ function App(props: AppProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [movie, setMovie] = useState<Movie>();
   const [config] = useState<Configuration>(window.CONFIG);
+  const [ready, setReady] = useState<boolean>(false);
 
-  const { ha } = useContext(HomeAssistantContext);
+  const { ha, states } = useContext(HomeAssistantContext);
+
+  const moviesRef = useRef<Movie[]>();
+  moviesRef.current = movies;
 
   useEffect(() => {
     if (ha.connectionState === ConnectionState.AUTHENTICATED) {
+      setReady(true);
       toast("Connected!", { type: 'success' });
+    } else if (ha.connectionState === ConnectionState.CLOSED) {
+      toast("Not Connected! Attempting to restore.", { type: 'error' });
     }
   }, [ha.connectionState]);
 
   useEffect(() => {
+    if (moviesRef.current.length === 0) {
+      const source = states?.find(e => e.entity_id === "sensor.tmdb_feed")
+      if (source) {
+         const copy = shuffle([...source.attributes.movies]);
+         console.log(`Discovered ${copy.length} movies.`)
+         setMovies(copy);
+       }
+     }
+  }, [states, movie]);
 
-    async function updateMovieList() {
-      const entity = await ha.api("GET", "states/sensor.tmdb_feed") as Entity<FeedAttributes>;
-      setMovies(shuffle(entity.attributes.movies));
-    }
-
-    async function updateMovie() {
-
-      if (movies.length === 0) {
-        await updateMovieList();
-      }
-
-      if (movies.length > 0) {
-        const nextMovie = movies.pop();
-        setMovie(nextMovie);
-      }
-    }
-
-    if (!movie) {
+  useEffect(() => {
+    if (!movie && movies.length > 0) {
       updateMovie();
     }
+  }, [movies, movie])
 
+  function updateMovie() {  
+    if (moviesRef.current.length > 0) {
+      const nextMovie = moviesRef.current.pop();
+      setMovie(nextMovie);
+    }  
+  }
+
+  useEffect(() => {      
     const interval = setInterval(updateMovie, props.refreshRate);
-
     return () => clearInterval(interval);
-  })
+  }, [props.refreshRate])
 
   function formatCategory(c?: string): string {
     if (c === "coming_soon") {
@@ -73,7 +81,7 @@ function App(props: AppProps) {
   }
 
   return (
-    <AppSection className="App">
+    <AppSection className="App" style={{visibility: ready ? 'visible' : 'hidden'}}>
       <TaskbarSection className="Taskbar">
         <DateTime className="Time" mode={DateTimeMode.Time} style={{visibility: config.showTime ? 'visible' : 'hidden'}}></DateTime>
         <DateTime className="Date" mode={DateTimeMode.Date} style={{visibility: config.showDate ? 'visible' : 'hidden'}}></DateTime>
@@ -95,11 +103,11 @@ function App(props: AppProps) {
       </FooterSection>
 
       <StatusbarSection className="Statusbar">
-        <MediaPlayer style={{visibility: config.mediaPlayer ? 'visible' : 'hidden'}} entity={config.mediaPlayer}></MediaPlayer>
+        <MediaPlayer style={{visibility: config.mediaPlayer ? 'visible' : 'hidden'}} config={config.mediaPlayer}></MediaPlayer>
       </StatusbarSection>
 
       
-      <ToastContainer position="bottom-right" autoClose={3000} newestOnTop closeButton={false} pauseOnFocusLoss={false} />
+      <ToastContainer position="bottom-right" autoClose={3000} newestOnTop closeButton={false} pauseOnFocusLoss={false} theme='colored' />
     
     </AppSection>
   );
