@@ -1,69 +1,70 @@
-import { url } from 'inspector';
-import React, { useEffect, useState } from 'react';
-import './App.css';
+import { useContext, useEffect, useState, useRef } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 import { shuffle } from './arrayHelpers';
 import { DateTime, DateTimeMode } from './components/DateTime';
 import { Platform } from './components/Platform';
+import { Poster } from './components/Poster';
+import { TitleBanner } from './components/TitleBanner';
+import { HomeAssistantContext } from './contexts/HomeAssistantContext';
+import type { Movie } from './dataTypes';
 
-const haUrl = ""; //http://localhost:8123";
+import 'react-toastify/dist/ReactToastify.min.css';
+import { AppSection, FooterSection, FooterText, PosterSection, TaskbarSection, HeaderSection, StatusbarSection } from './App.styled';
+import { MediaPlayer } from './components/MediaPlayer';
 
-interface Entity {
-  entity_id: string,
-  attributes: EntityAttributes,
+export interface AppProps {
+  refreshRate: number;
 }
 
-interface EntityAttributes {
-  movies: Movie[]
-}
-
-interface Movie {
-  title: string
-  category: string
-  platform: string
-  poster: string
-}
-
-const urlParams = new URLSearchParams(window.location.search);
-const authToken = urlParams.get('authToken');
-const refreshRate = (urlParams.get('refresh') ?? 30000) as number;
-
-function App() {
-
+function App(props: AppProps) {
+  
   const [movies, setMovies] = useState<Movie[]>([]);
   const [movie, setMovie] = useState<Movie>();
+  const [config] = useState<Configuration>(window.CONFIG);
+
+  const { ha, states } = useContext(HomeAssistantContext);
+
+  const moviesRef = useRef<Movie[]>();
+  moviesRef.current = movies;
 
   useEffect(() => {
-
-    async function updateMovieList() {
-      const res = await fetch(haUrl + '/api/states/sensor.tmdb_feed', {
-        headers: {
-          'Authorization': 'Bearer ' + authToken
-        }
-      });
-
-      const entity = (await res.json()) as Entity;      
-      setMovies(shuffle(entity.attributes.movies));
+    if (ha.ready) {
+      toast.clearWaitingQueue();
+      toast.dismiss();
+      toast("Connected!", { type: 'success', delay: 1000 });
+    } else if (ha.ready === false) {
+      toast("Not Connected! Attempting to restore.", { type: 'error', autoClose: false });
     }
+  }, [ha.ready])
 
-    async function updateMovie() {
-  
-        if (movies.length == 0) {
-          await updateMovieList();
-        }
+  useEffect(() => {
+    if (moviesRef.current.length === 0) {
+      const source = states.find(e => e.entity_id === "sensor.tmdb_feed")
+      if (source) {
+         const copy = shuffle([...source.attributes.movies]);
+         console.log(`Discovered ${copy.length} movies.`)
+         setMovies(copy);
+       }
+     }
+  }, [states, movie]);
 
-        if (movies.length > 0) {
-          setMovie(movies.pop());
-        }
-    }
-
-    if (!movie) {
+  useEffect(() => {
+    if (!movie && movies.length > 0) {
       updateMovie();
     }
+  }, [movies, movie])
 
-    const interval = setInterval(updateMovie, refreshRate);
+  function updateMovie() {  
+    if (moviesRef.current.length > 0) {
+      const nextMovie = moviesRef.current.pop();
+      setMovie(nextMovie);
+    }  
+  }
 
+  useEffect(() => {      
+    const interval = setInterval(updateMovie, props.refreshRate);
     return () => clearInterval(interval);
-  })
+  }, [props.refreshRate])
 
   function formatCategory(c?: string): string {
     if (c === "coming_soon") {
@@ -73,31 +74,48 @@ function App() {
       return "In Theaters"
     }
     if (c === "streaming") {
-      return "Now Playing"
+      return "Now Streaming"
     }
     return ""
   }
 
   return (
-    <div className="App">
-      <div className="Header">
-        <DateTime className="Time" mode={DateTimeMode.Time}></DateTime>
-        <div className="Title">
-          Morris
-          <br/>
-          Home Theater
-        </div>
-        <DateTime className="Date" mode={DateTimeMode.Date}></DateTime>
-      </div>
-      <div className="Content" style={{backgroundImage: `url(${movie?.poster})`}}>
-      </div>
-      <div className="Footer">
+    <AppSection className="App">
+      <TaskbarSection className="Taskbar">
+        <DateTime className="Time" mode={DateTimeMode.Time} style={{visibility: config.showTime ? 'visible' : 'hidden'}}></DateTime>
+        <DateTime className="Date" mode={DateTimeMode.Date} style={{visibility: config.showDate ? 'visible' : 'hidden'}}></DateTime>
+      </TaskbarSection>
+      
+      <HeaderSection className="Header">
+        <TitleBanner title={config.title} subtitle={config.subtitle}></TitleBanner>
+      </HeaderSection>
+      
+      <PosterSection>
+        <Poster className="Poster" imageUrl={movie?.poster} />
+      </PosterSection>      
+      
+      <FooterSection className="Footer">
         <Platform className="Platform" platform={movie?.platform}></Platform>
-        <div className="Footer-Text">
+        <FooterText className="Footer-Text">
           {formatCategory(movie?.category)}
-        </div>
-      </div>
-    </div>
+        </FooterText>
+      </FooterSection>
+
+      <StatusbarSection className="Statusbar">
+        <MediaPlayer style={{visibility: config.mediaPlayer ? 'visible' : 'hidden'}} config={config.mediaPlayer}></MediaPlayer>
+      </StatusbarSection>
+
+      
+      <ToastContainer 
+        position="bottom-right" 
+        autoClose={3000} 
+        newestOnTop 
+        closeButton={false}
+        pauseOnFocusLoss={false} 
+        limit={3}
+        theme='colored' />
+    
+    </AppSection>
   );
 }
 

@@ -1,15 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { HomeAssistantProvider } from './contexts/HomeAssistantContext';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const urlParams = new URLSearchParams(window.location.search);
+const authToken = urlParams.get('authToken');
+const refreshRate = ((urlParams.get('refresh') ?? 30000) as number);
+
+const render = () => {
+  ReactDOM.render(
+    <React.StrictMode>
+      <HomeAssistantProvider hostname={window.CONFIG?.homeAssistant} authToken={authToken}>    
+        <App refreshRate={refreshRate} />
+      </HomeAssistantProvider>
+    </React.StrictMode>,
+    document.getElementById('root'));
+};
+
+//load the theme
+if (window.CONFIG?.theme) {
+  import(`./themes/${window.CONFIG.theme}.scss`).then(() => {
+    render();
+  })
+} else {
+  render();
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -1,5 +1,9 @@
 body {
+  width: 100%;
   margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -7,7 +11,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.TitleBanner-Title {
+  *:last-child {
+    display: none;
+  }
+}
+
+.Platform {
+  width: 15vw;
+  height: 15vw;
+  background-size: cover;
+}
+
+.Poster {
+  height:900px;
+  width: 600px;
 }
