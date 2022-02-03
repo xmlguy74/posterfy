@@ -36,7 +36,7 @@ export function DateTime(props: DateTimeProps) {
                 ) :
                 (
                     <>
-                        <div>{moment(now).format("MMM DD, YYYY")}</div>
+                        <div>{moment(now).format("MMM D, YYYY")}</div>
                     </>
                 )
             }

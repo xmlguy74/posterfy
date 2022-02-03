@@ -10,12 +10,14 @@ export function resolveMetadata<T>(entity_id: string, entity: AnyEntity, context
     
     var result;
     
-    if (isMetadataReducer(metadata)) {
-        result = metadata(entity_id, entity, context);
-    }
+    if (metadata) {
+      if (isMetadataReducer(metadata)) {
+          result = metadata(entity_id, entity, context);
+      }
 
-    if (isMetadataMap(metadata)) {
-        result = metadata[entity?.state];
+      if (isMetadataMap(metadata)) {
+          result = metadata[entity?.state];
+      }
     }
 
     return result ?? ({} as T);

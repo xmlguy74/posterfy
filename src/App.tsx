@@ -40,7 +40,7 @@ function App(props: AppProps) {
 
   useEffect(() => {
     if (moviesRef.current.length === 0) {
-      const source = states?.find(e => e.entity_id === "sensor.tmdb_feed")
+      const source = states.find(e => e.entity_id === "sensor.tmdb_feed")
       if (source) {
          const copy = shuffle([...source.attributes.movies]);
          console.log(`Discovered ${copy.length} movies.`)

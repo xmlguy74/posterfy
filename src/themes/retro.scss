@@ -41,7 +41,7 @@ body {
     width: 200vw;
     height: 300vh;
     position: absolute;
-    z-index: -1;
+    z-index: -10000;
     bottom: -120vh;
     transform: rotateX(-100deg);
     mask-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 80%);
@@ -97,6 +97,24 @@ body {
     }
 }
 
+@keyframes move {
+  0% {
+    opacity: 0;
+    offset-distance: 0%;
+  }
+  69% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+    offset-distance: 0%;
+  }
+  100% {
+    opacity: 1;
+    offset-distance: 100%;
+  }
+}
+
 .TitleBanner-Title {
   position: relative;
   font-family: "Exo";
@@ -107,6 +125,12 @@ body {
 
   &::after {
     content: "";
+    
+    //opacity: 0;
+    //offset-path: path('M -224.8466 98.8835 L 18.025 99.1087 L 41.0947 43.7518 l 24.2381 0.7398 l 2.6277 66.7096 l 36.2319 -66.1126 l 22.968 -0.7748 l -8.7792 53.7986 l 15.3819 0.0144 c 0 0 7.5132 -31.2887 42.7313 -28.9319 c 37.7475 2.5261 24.6651 29.2091 24.6651 29.2091 l 12.0771 -0.3652 l 6.8013 -29.3645 l 23.7997 1.0119 l -0.2732 9.4747 l 13.3765 -9.2047 l 13.3698 -1.493 l -8.1292 27.9765 l 10.8275 0.0399 l 6.4808 -26.5966 l 22.7393 0.1041 l 1.8663 10.4533 l 11.3205 -9.9417 l 12.8926 -1.6949 l -6.019 26.7499 l 8.5314 0.6591 l 14.1054 -54.2693 l 28.5663 -0.9052 l -13.978 55.2367 l 9.4089 -0.7627 c 0 0 7.1703 -23.7197 31.4532 -24.9384 c 17.3395 -0.8702 32.4499 3.8776 32.4499 3.8776 l -3.6156 16.2448 l -10.2657 2.6779 l 7.8289 6.7177 l 246.9634 -0.7935');
+    //animation: move 15000ms infinite ease-in-out;
+    //left: -0.1em;
+    
     animation: spin ease 5s;
     animation-iteration-count: infinite;
     position: absolute;
@@ -164,7 +188,7 @@ body {
 }
 
 .Poster {
-  border: outset 3px #fff;
+  border: solid 3px #fff;
   border-radius: 10px;
   width: 80vw;
   height: 70vh;
@@ -173,7 +197,7 @@ body {
 
 .Platform {
   margin-top: 1vh;
-  border: outset 3px #fff;
+  border: solid 3px #fff;
   border-radius: 10px;
 }
 

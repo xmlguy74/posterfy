@@ -43,7 +43,7 @@ var CONFIG = {
         //entity_id: 'sensor.movie_room_roku_state',
         source: (id, entity, context) => {
             
-            const harmony = context.states?.find(s => s.entity_id === 'remote.movie_room_harmony');
+            const harmony = context.states.find(s => s.entity_id === 'remote.movie_room_harmony');
             if (harmony) {
                 switch (harmony.state) {
                     case 'on': {
@@ -60,7 +60,7 @@ var CONFIG = {
                 }
             }
 
-            const player = context.states?.find(s => s.entity_id === 'media_player.rec_room_roku');
+            const player = context.states.find(s => s.entity_id === 'media_player.rec_room_roku');
             if (player) {
                 return {
                     text: player.attributes.source, 
@@ -69,7 +69,7 @@ var CONFIG = {
             }
         },
         state: (id, entity, context) => {
-            const harmony = context.states?.find(s => s.entity_id === 'remote.movie_room_harmony');
+            const harmony = context.states.find(s => s.entity_id === 'remote.movie_room_harmony');
             if (harmony) {
                 switch (harmony.state) {
                     case 'on': {
@@ -81,7 +81,7 @@ var CONFIG = {
                         }
 
                         if (harmony.attributes.current_activity?.includes('Roku') ?? false) {
-                            const player = context.states?.find(s => s.entity_id === 'media_player.rec_room_roku');
+                            const player = context.states.find(s => s.entity_id === 'media_player.rec_room_roku');
                             if (player) {
                                 switch (player.attributes.source) {
                                     case 'Roku': {
@@ -90,7 +90,7 @@ var CONFIG = {
                                         }
                                     }
                                     default: {
-                                        const sensor = context.states?.find(s => s.entity_id === 'sensor.movie_room_roku_state');
+                                        const sensor = context.states.find(s => s.entity_id === 'sensor.movie_room_roku_state');
                                         return ROKU_STATE_MAP[sensor.state];                                        
                                     }
                                 }

@@ -22,7 +22,8 @@ export const PosterImage = styled('div')<PosterImageProps>({
     position: 'absolute',
     backgroundSize: 'cover',
     height: '100%',
-    width: '100%'
+    width: '100%',
+    zIndex: '-1'
 }, props => ({
     animation: props.animate ? `${FadeIn} ease 2s` : 'none'
 }));

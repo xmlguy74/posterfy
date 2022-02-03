@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 export enum ConnectionState {
@@ -74,17 +74,18 @@ export interface HomeAssistant {
     connectionState: ConnectionState,
     send: <TCommand extends Command>(command: TCommand, callback?: SendCallback) => void,
     api: (method: string, path: string) => Promise<any>,
-    received: Message,
 }
 
 export type SendCallback = (msg: Message) => boolean | void;
 
 export function useHomeAssistant(hostname: string, authToken: string): HomeAssistant {
     
-    const [received] = useState<Message>();
     const [authorized, setAuthorized] = useState<boolean>(false);
     const [connect, setConnect] = useState<boolean>(true);
     const [callbacks] = useState<Map<number, SendCallback>>(new Map<number, SendCallback>());
+
+    const callbacksRef = useRef<Map<number, SendCallback>>();
+    callbacksRef.current = callbacks;
 
     const { sendMessage, lastMessage, readyState } = useWebSocket('ws://' + hostname + "/api/websocket", {
         retryOnError: false,
@@ -138,10 +139,10 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
     
                 default:
                     const m = data as Message;
-                    const c = callbacks.get(m.id);
+                    const c = callbacksRef.current.get(m.id);
                     if (c) {
                         if (!c(m)) {
-                            callbacks.delete(m.id);
+                            callbacksRef.current.delete(m.id);
                         }
                     }
                     break;
@@ -151,45 +152,41 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
         if (lastMessage) {
             processMessage(lastMessage);
         }
-    }, [authToken, sendMessage, lastMessage, callbacks]);
+    }, [authToken, sendMessage, lastMessage]);
     
-    function doPing() {
+    const send = useCallback(<TCommand extends Command>(command: TCommand, callback?: SendCallback) => {
+        if (callback && command.id) {            
+            callbacksRef.current.set(command.id, callback);
+        }
+        sendMessage(JSON.stringify(command), false);
+    }, [sendMessage]);
+        
+    const doPing = useCallback(() => {
         try {
             if (connectionStateRef.current === ConnectionState.AUTHENTICATED || connectionStateRef.current === ConnectionState.BROKEN) {
                 const handle = setTimeout(() => {
-                    console.log("ping lost")
-                    callbacks.clear();
+                    callbacksRef.current.clear();
                     setConnect(false);
                 }, 5000);
 
-                console.log("ping")
                 send(new PingCommand(), (msg: Message) => {
-                    console.log("pong")
                     clearTimeout(handle);
                     setConnect(true);
                     return false;
                 })
             }
             else {
-                console.log("ping reset")
                 setConnect(true);
             }
         } catch (e) {
             console.error(e);
         }
-    }
+    }, [send]);
 
     useEffect(() => {
         const handle = setInterval(doPing, 10000);
         return () => clearInterval(handle);
-    }, [])
-
-    function send<TCommand extends Command>(command: TCommand, callback?: SendCallback) {
-        if (callback && command.id) {            
-            callbacks.set(command.id, callback);
-        }
-        sendMessage(JSON.stringify(command), false);
-    }
+    }, [doPing])
 
     async function api(method: string, path: string) {
         if (path.startsWith('/')) {
@@ -209,6 +206,5 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
         connectionState,
         send,
         api,
-        received,
     }
 }

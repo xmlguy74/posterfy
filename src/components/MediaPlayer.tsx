@@ -24,7 +24,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
 
     const ha = useContext(HomeAssistantContext);
 
-    const mp = ha.states?.find(i => i.entity_id === props.config.entity_id);
+    const mp = ha.states.find(i => i.entity_id === props.config.entity_id);
 
     const source = resolveMetadata<MediaPlayerSource>(props.config.entity_id, mp, ha, props.config.source);
     const state = resolveMetadata<MediaPlayerState>(props.config.entity_id, mp, ha, props.config.state);
@@ -34,7 +34,7 @@ export function MediaPlayer(props: MediaPlayerProps) {
     return (
         <Container className={props.className} style={props.style}>
             <ContentSection className='MediaPlayer-Content'>
-                { source.image && <MediaImage style={{backgroundImage: `url(http://${window.CONFIG.homeAssistant}${source.image}`}} /> }
+                { source.image && <MediaImage style={{backgroundImage: `url(http://${window.CONFIG?.homeAssistant}${source.image}`}} /> }
                 <div>{source.text}</div>
             </ContentSection>
             <StatusSection className='MediaPlayer-Status'>
