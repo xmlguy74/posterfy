@@ -9,7 +9,7 @@ interface HomeAssistantContextType {
 
 export const HomeAssistantContext = React.createContext<HomeAssistantContextType>(
   {
-      ha: null,
+    ha: null,
       states: [],
   }
 )
@@ -23,8 +23,6 @@ export function HomeAssistantProvider(props: React.PropsWithChildren<HomeAssista
     
     const ha = useHomeAssistant(props.hostname, props.authToken);
     const { states } = useEntityCache(ha);
-
-    console.log('ha context')
     
     return (
         <HomeAssistantContext.Provider value={{ha, states}}>

@@ -71,6 +71,7 @@ export interface EventMessageData {
 }
 
 export interface HomeAssistant {
+    ready?: boolean,
     connectionState: ConnectionState,
     send: <TCommand extends Command>(command: TCommand, callback?: SendCallback) => void,
     api: (method: string, path: string) => Promise<any>,
@@ -83,6 +84,7 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
     const [authorized, setAuthorized] = useState<boolean>(false);
     const [connect, setConnect] = useState<boolean>(true);
     const [callbacks] = useState<Map<number, SendCallback>>(new Map<number, SendCallback>());
+    const [ready, setReady] = useState<boolean>();
 
     const callbacksRef = useRef<Map<number, SendCallback>>();
     callbacksRef.current = callbacks;
@@ -135,6 +137,7 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
                 
                 case 'auth_ok':
                     setAuthorized(true);
+                    setReady(true);
                     break;
     
                 default:
@@ -166,6 +169,7 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
             if (connectionStateRef.current === ConnectionState.AUTHENTICATED || connectionStateRef.current === ConnectionState.BROKEN) {
                 const handle = setTimeout(() => {
                     callbacksRef.current.clear();
+                    setReady(false);
                     setConnect(false);
                 }, 5000);
 
@@ -203,6 +207,7 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
     }
 
     return {
+        ready,
         connectionState,
         send,
         api,

@@ -7,7 +7,6 @@ import { Poster } from './components/Poster';
 import { TitleBanner } from './components/TitleBanner';
 import { HomeAssistantContext } from './contexts/HomeAssistantContext';
 import type { Movie } from './dataTypes';
-import { ConnectionState } from './hooks/useHomeAssistant';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import { AppSection, FooterSection, FooterText, PosterSection, TaskbarSection, HeaderSection, StatusbarSection } from './App.styled';
@@ -22,7 +21,6 @@ function App(props: AppProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [movie, setMovie] = useState<Movie>();
   const [config] = useState<Configuration>(window.CONFIG);
-  const [ready, setReady] = useState<boolean>(false);
 
   const { ha, states } = useContext(HomeAssistantContext);
 
@@ -30,13 +28,14 @@ function App(props: AppProps) {
   moviesRef.current = movies;
 
   useEffect(() => {
-    if (ha.connectionState === ConnectionState.AUTHENTICATED) {
-      setReady(true);
-      toast("Connected!", { type: 'success' });
-    } else if (ha.connectionState === ConnectionState.CLOSED) {
-      toast("Not Connected! Attempting to restore.", { type: 'error' });
+    if (ha.ready) {
+      toast.clearWaitingQueue();
+      toast.dismiss();
+      toast("Connected!", { type: 'success', delay: 1000 });
+    } else if (ha.ready === false) {
+      toast("Not Connected! Attempting to restore.", { type: 'error', autoClose: false });
     }
-  }, [ha.connectionState]);
+  }, [ha.ready])
 
   useEffect(() => {
     if (moviesRef.current.length === 0) {
@@ -81,7 +80,7 @@ function App(props: AppProps) {
   }
 
   return (
-    <AppSection className="App" style={{visibility: ready ? 'visible' : 'hidden'}}>
+    <AppSection className="App">
       <TaskbarSection className="Taskbar">
         <DateTime className="Time" mode={DateTimeMode.Time} style={{visibility: config.showTime ? 'visible' : 'hidden'}}></DateTime>
         <DateTime className="Date" mode={DateTimeMode.Date} style={{visibility: config.showDate ? 'visible' : 'hidden'}}></DateTime>
@@ -107,7 +106,14 @@ function App(props: AppProps) {
       </StatusbarSection>
 
       
-      <ToastContainer position="bottom-right" autoClose={3000} newestOnTop closeButton={false} pauseOnFocusLoss={false} theme='colored' />
+      <ToastContainer 
+        position="bottom-right" 
+        autoClose={3000} 
+        newestOnTop 
+        closeButton={false}
+        pauseOnFocusLoss={false} 
+        limit={3}
+        theme='colored' />
     
     </AppSection>
   );
