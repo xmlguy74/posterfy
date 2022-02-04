@@ -1,46 +1,58 @@
-# Getting Started with Create React App
+# Posterfy
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple, yet highly customizable movie poster app for Home Assistant. The primary goal of this project was to provide a digital movie poster experience, which displays movie posters based on a feed entity from Home Assistant.
 
-## Available Scripts
+The app is basically a webpage that is designed to be displayed on a large format screen, oriented in portrait layout, like a movie poster. The page will periodically loop thru the list of movie posters provided by a Home Assistant entity's attribute data. This is the feed from which the page draws its information.
 
-In the project directory, you can run:
+Currently, this feed entity is created by using a custom component located here: https://github.com/xmlguy74/posterfy-homeassistant. This component provides a sensor entity which updates its state from the [The Movie DB](https://www.themoviedb.org/). 
 
-### `npm start`
+The typical setup would involve the following (high level concept):
+- Using a Raspberry Pi device (3b+ or 4b), setup Raspbian to automatically launch the browser upon startup. The initial page should be that of the Posterfy application. 
+- Use a LCD monitor or TV (turn it sideways!) connected to the Raspberry Pi. This is your 'poster'. 
+- Install the Posterfy-HomeAssistant custom component in order to retrieve movie feed data. You will need to get an API key for yourself, and configure the custom component to use it.
+- Build and copy the poster files into your www folder path on Home Assistant.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+__This project is in an alpha stage.__ If you should have any questions, comments, or want to contribute, please post them on the home assistant forum or create an issue in github.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Links
 
-### `npm test`
+- Discussion on Home Assistant Community
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Screenshots
 
-### `npm run build`
+![Screenshot 1](/docs/screenshot1.png)
+![Screenshot 2](/docs/screenshot2.png)
+![Screenshot 3](/docs/screenshot3.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How to use
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone this repo locally. 
+2. Build the Posterfy app. The is a React web app, built using the following commands:
+    1. yarn
+        - This will install any project dependencies.
+    2. yarn build
+        - This will transpile the web app into the `build` folder.
+3. After building the app, copy the contents of the build folder into your Home Assistants `\www\posterfy` folder.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### !!!WARNING!!!
 
-### `npm run eject`
+Files served from the www folder (/local/ url), aren't protected by the Home Assistant authentication. Files stored in this folder, if the URL is known, can be accessed by anybody without authentication. Please make sure that your HA instance is not exposed via Internet or at least that long-lived token is not hardcoded in the config.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Configuration
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app expects a global CONFIG object. This object contains the configuration settings for the app. Modify the copied config.js file (`/www/posterfy/config.js`) to adjust for any custom settings you want to change. For example, this is where you change the title & subtitle values.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+In order for the app to authenticate with Home Assistant, you will need to generate a long-lived token in HA. This value should be passed to the app via a url query parameter when viewing the app in a browser. The query parameter should be named `authToken`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Example URL
 
-## Learn More
+``
+    http://myhomeassistant:8123/local/posterfy/index.html?authToken=<TOKEN-GOES-HERE>
+``
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Current Limitations & Assumptions
+- The app assumes a 900x1600 resolution (portrait).
+- The media player status has been designed using a Roku. Other players may support more advanced abilities. __To be improved!__
+- The feed entity is currently limited on what streaming services it looks for under the 'now streaming' category. (Netflix, Amazon Prime, HBO Max).
+- Currently assumes a US region.
 
-To learn React, check out the [React documentation](https://reactjs.org/).

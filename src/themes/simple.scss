@@ -1,0 +1,97 @@
+
+body {
+  margin: 0;
+  background-color: #000000;
+  font-family: "sans serif";
+  -webkit-font-smoothing: antialiased;
+}
+
+.App {
+  color: white;
+  perspective: 100vw;
+}
+
+.Taskbar {
+  margin-top: 1vh;
+  width: 100%;
+}
+
+.Time {
+  text-align: left;
+  font-size: 28pt;
+  flex-grow: 1;
+  color: #dddddd;
+  width: 50%;
+  margin-left: 2vw;
+}
+
+.Date {
+  width: 50%;
+  text-align: right;
+  font-size: 28pt;
+  flex-grow: 1;
+  color: #dddddd;
+  margin-right: 2vw;
+}
+
+.TitleBanner-Background {
+  color: #59c1fe;
+  height: 2.5em;
+  margin-top: 0.9em;
+}
+
+.TitleBanner-Title {
+  position: relative;
+  font-size: 5em;
+  margin: -1vh 0 0 0;
+}
+
+.TitleBanner-Subtitle {
+  font-weight: 300;
+  margin: 0;
+  font-size: 2em;
+  margin-top: -0.5em;
+  color: white;
+  z-index: 99999;
+}
+
+.Poster {
+  border: solid 3px #fff;
+  border-radius: 10px;
+  width: 90vw;
+  height: 72vh;
+}
+
+.Platform {
+  margin-top: 1vh;
+  border: solid 3px #fff;
+  border-radius: 10px;
+}
+
+.Footer {
+    width: 90vw;
+    height: 10vh;
+}
+.Footer-Text {
+  font-weight: 700;
+  font-variant-caps: all-small-caps;
+  font-size: 65pt;
+  flex-grow: 1;
+}
+
+.Statusbar {
+  margin-top: 1vh;
+  border-top: solid 3px #fff;
+  color: #fff;
+  height: 5vh;
+  width: 100%;
+  font-size: 28pt;
+}
+
+.MediaPlayer-Content {
+  margin-left: 2vw;
+}
+
+.MediaPlayer-Status {
+  margin-right: 2vw;
+}
