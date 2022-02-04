@@ -86,6 +86,9 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
     const [callbacks] = useState<Map<number, SendCallback>>(new Map<number, SendCallback>());
     const [ready, setReady] = useState<boolean>();
 
+    const readyRef = useRef<boolean>();
+    readyRef.current = ready;
+
     const callbacksRef = useRef<Map<number, SendCallback>>();
     callbacksRef.current = callbacks;
 
@@ -128,6 +131,7 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
             const data = JSON.parse(msg.data);        
             switch (data?.type) {
                 case 'auth_required':
+                    console.log('Sending authorization details.');
                     setAuthorized(false);
                     sendMessage(JSON.stringify({
                         type: 'auth',
@@ -136,6 +140,7 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
                     break;
                 
                 case 'auth_ok':
+                    console.log('Authorization success!');
                     setAuthorized(true);
                     setReady(true);
                     break;
@@ -166,8 +171,9 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
         
     const doPing = useCallback(() => {
         try {
-            if (connectionStateRef.current === ConnectionState.AUTHENTICATED || connectionStateRef.current === ConnectionState.BROKEN) {
+            if (readyRef.current) {
                 const handle = setTimeout(() => {
+                    console.log('Lost ping. You still there?');                    
                     callbacksRef.current.clear();
                     setReady(false);
                     setConnect(false);
