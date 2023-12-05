@@ -21,6 +21,7 @@ export interface PosterImageProps {
 export const PosterImage = styled('div')<PosterImageProps>({
     position: 'absolute',
     backgroundSize: 'cover',
+    backgroundPosition: 'center center',
     height: '100%',
     width: '100%',
     zIndex: '-1'
