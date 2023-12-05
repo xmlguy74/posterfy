@@ -39,12 +39,16 @@ function App(props: AppProps) {
 
   useEffect(() => {
     if (moviesRef.current.length === 0) {
-      const source = states.find(e => e.entity_id === "sensor.tmdb_feed")
-      if (source) {
-         const copy = shuffle([...source.attributes.movies]);
-         console.log(`Discovered ${copy.length} movies.`)
-         setMovies(copy);
-       }
+      try {
+        const source = states.find(e => e.entity_id === "sensor.tmdb_feed")
+        if (source) {
+          const copy = shuffle([...source.attributes.movies]);
+          console.log(`Discovered ${copy.length} movies.`)
+          setMovies(copy);
+        }
+      } catch (e) {
+        console.error(`Failed to load movie list. ${e}`)
+      }
      }
   }, [states, movie]);
 
@@ -91,10 +95,10 @@ function App(props: AppProps) {
       </HeaderSection>
       
       <PosterSection>
-        <Poster className="Poster" imageUrl={movie?.poster} />
+        <Poster className="Poster" imageUrl={movie?.poster} style={{visibility: config.showPoster ? 'visible' : 'hidden'}}/>
       </PosterSection>      
       
-      <FooterSection className="Footer">
+      <FooterSection className="Footer" style={{visibility: config.showFooter ? 'visible' : 'hidden'}}>
         <Platform className="Platform" platform={movie?.platform}></Platform>
         <FooterText className="Footer-Text">
           {formatCategory(movie?.category)}
@@ -102,7 +106,7 @@ function App(props: AppProps) {
       </FooterSection>
 
       <StatusbarSection className="Statusbar">
-        <MediaPlayer style={{visibility: config.mediaPlayer ? 'visible' : 'hidden'}} config={config.mediaPlayer}></MediaPlayer>
+        <MediaPlayer style={{visibility: config.showMediaPlayer ? 'visible' : 'hidden'}} config={config.mediaPlayer}></MediaPlayer>
       </StatusbarSection>
 
       

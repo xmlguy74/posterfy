@@ -3,7 +3,8 @@ import { PosterContainer, PosterImage } from './Poster.styled';
 
 export interface PosterProps {
     className?: string,
-    imageUrl: string
+    imageUrl: string,
+    style?: React.CSSProperties
 }
 
 export function Poster(props: PosterProps) {
@@ -21,7 +22,7 @@ export function Poster(props: PosterProps) {
     }, [props.imageUrl])
 
     return (
-        <PosterContainer className={props.className}>
+        <PosterContainer className={props.className} style={props.style}>
             <PosterImage style={{backgroundImage: `url(${images.at(0)})`}} />
             <PosterImage ref={currentContent} style={{backgroundImage: `url(${images.at(1)})`}} />
         </PosterContainer>

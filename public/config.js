@@ -38,6 +38,9 @@ var CONFIG = {
     subtitle: 'Family Theater',
     showDate: true,
     showTime: true,
+    showPoster: true,
+    showFooter: true,
+    showMediaPlayer: true,
 
     mediaPlayer: {
         //entity_id: 'sensor.movie_room_roku_state',

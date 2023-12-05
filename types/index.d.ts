@@ -6,6 +6,9 @@ interface Configuration {
     subtitle: string,
     showTime: boolean,
     showDate: boolean,
+    showPoster: boolean,
+    showMediaPlayer: boolean,
+    showFooter: boolean,
 
     mediaPlayer: MediaPlayerConfig
 }
