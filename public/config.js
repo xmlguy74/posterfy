@@ -46,11 +46,11 @@ var CONFIG = {
         //entity_id: 'sensor.movie_room_roku_state',
         source: (id, entity, context) => {
             
-            const harmony = context.states.find(s => s.entity_id === 'remote.movie_room_harmony');
-            if (harmony) {
-                switch (harmony.state) {
+            const mediaPlayer = context.states.find(s => s.entity_id === 'media_player.marantz_sr8012');
+            if (mediaPlayer) {
+                switch (mediaPlayer.state) {
                     case 'on': {
-                        if (harmony.attributes.current_activity?.includes('Game') ?? false) {
+                        if (mediaPlayer.attributes.source?.includes('Xbox') ?? false) {
                             return {
                                 text: "XBox",
                             }
@@ -72,18 +72,18 @@ var CONFIG = {
             }
         },
         state: (id, entity, context) => {
-            const harmony = context.states.find(s => s.entity_id === 'remote.movie_room_harmony');
-            if (harmony) {
-                switch (harmony.state) {
+            const mediaPlayer = context.states.find(s => s.entity_id === 'media_player.marantz_sr8012');
+            if (mediaPlayer) {
+                switch (mediaPlayer.state) {
                     case 'on': {
-                        if (harmony.attributes.current_activity?.includes('Game') ?? false) {
+                        if (mediaPlayer.attributes.source?.includes('Xbox') ?? false) {
                             return {
                                 text: null,
                                 icon: "BsController"
                             }
                         }
 
-                        if (harmony.attributes.current_activity?.includes('Roku') ?? false) {
+                        if (mediaPlayer.attributes.source?.includes('Roku') ?? false) {
                             const player = context.states.find(s => s.entity_id === 'media_player.rec_room_roku');
                             if (player) {
                                 switch (player.attributes.source) {
