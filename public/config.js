@@ -33,9 +33,9 @@ const ROKU_STATE_MAP = {
 var CONFIG = {
     homeAssistant: "192.168.15.50:8123",
     secure: false,
-    theme: "retro",
-    title: '',
-    subtitle: '',
+    theme: "retro_original",
+    title: 'Morris',
+    subtitle: 'Gameroom',
     showDate: true,
     showTime: true,
     showPoster: true,
