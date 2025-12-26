@@ -11,7 +11,7 @@ const refreshRate = ((urlParams.get('refresh') ?? 30000) as number);
 const render = () => {
   ReactDOM.render(
     <React.StrictMode>
-      <HomeAssistantProvider hostname={window.CONFIG?.homeAssistant} authToken={authToken}>    
+      <HomeAssistantProvider hostname={window.CONFIG?.homeAssistant} authToken={authToken} entities={window.CONFIG?.entities}>    
         <App refreshRate={refreshRate} />
       </HomeAssistantProvider>
     </React.StrictMode>,

@@ -16,13 +16,14 @@ export const HomeAssistantContext = React.createContext<HomeAssistantContextType
 
 export interface HomeAssistantProviderProps {
     hostname: string,
-    authToken: string
+    authToken: string,
+    entities: string[],
 }
 
 export function HomeAssistantProvider(props: React.PropsWithChildren<HomeAssistantProviderProps>) {
     
     const ha = useHomeAssistant(props.hostname, props.authToken);
-    const { states } = useEntityCache(ha);
+    const { states } = useEntityCache(ha, props.entities);
     
     return (
         <HomeAssistantContext.Provider value={{ha, states}}>

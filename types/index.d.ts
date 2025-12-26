@@ -9,6 +9,7 @@ interface Configuration {
     showPoster: boolean,
     showMediaPlayer: boolean,
     showFooter: boolean,
+    entities: string[],
 
     mediaPlayer: MediaPlayerConfig
 }

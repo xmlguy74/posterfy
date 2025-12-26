@@ -23,8 +23,14 @@ export class Command {
     }
 }
 
+export class SubscribeEntitiesCommand extends Command {
+    constructor(public entity_ids: string[]) {
+        super('subscribe_entities');
+    }
+}
+
 export class SubscribeEventsCommand extends Command {
-    constructor(public event_type: 'state_changed') {
+    constructor(public event_type: 'state_changed', public entity_id?: string) {
         super('subscribe_events');
     }
 }
@@ -166,7 +172,9 @@ export function useHomeAssistant(hostname: string, authToken: string): HomeAssis
         if (callback && command.id) {            
             callbacksRef.current.set(command.id, callback);
         }
-        sendMessage(JSON.stringify(command), false);
+        const msg = JSON.stringify(command);
+        console.log("send", msg)
+        sendMessage(msg, false);
     }, [sendMessage]);
         
     const doPing = useCallback(() => {
